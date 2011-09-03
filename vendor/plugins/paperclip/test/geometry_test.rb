@@ -1,4 +1,4 @@
-require 'test/helper'
+require './test/helper'
 
 class GeometryTest < Test::Unit::TestCase
   context "Paperclip::Geometry" do
@@ -49,6 +49,15 @@ class GeometryTest < Test::Unit::TestCase
       assert_nil @geo.modifier
     end
 
+    should "treat x and X the same in geometries" do
+      @lower = Paperclip::Geometry.parse("123x456")
+      @upper = Paperclip::Geometry.parse("123X456")
+      assert_equal 123, @lower.width
+      assert_equal 123, @upper.width
+      assert_equal 456, @lower.height
+      assert_equal 456, @upper.height
+    end
+
     ['>', '<', '#', '@', '%', '^', '!', nil].each do |mod|
       should "ensure the modifier #{mod.inspect} is preserved" do
         assert @geo = Paperclip::Geometry.parse("123x456#{mod}")
@@ -56,7 +65,7 @@ class GeometryTest < Test::Unit::TestCase
         assert_equal "123x456#{mod}", @geo.to_s
       end
     end
-    
+
     ['>', '<', '#', '@', '%', '^', '!', nil].each do |mod|
       should "ensure the modifier #{mod.inspect} is preserved with no height" do
         assert @geo = Paperclip::Geometry.parse("123x#{mod}")
@@ -68,7 +77,7 @@ class GeometryTest < Test::Unit::TestCase
     should "make sure the modifier gets passed during transformation_to" do
       assert @src = Paperclip::Geometry.parse("123x456")
       assert @dst = Paperclip::Geometry.parse("123x456>")
-      assert_equal "123x456>", @src.transformation_to(@dst).to_s
+      assert_equal ["123x456>", nil], @src.transformation_to(@dst)
     end
 
     should "generate correct ImageMagick formatting string for W-formatted string" do
@@ -109,6 +118,35 @@ class GeometryTest < Test::Unit::TestCase
     should "not generate from a bad file" do
       file = "/home/This File Does Not Exist.omg"
       assert_raise(Paperclip::NotIdentifiedByImageMagickError){ @geo = Paperclip::Geometry.from_file(file) }
+    end
+
+    should "not generate from a blank filename" do
+      file = ""
+      assert_raise(Paperclip::NotIdentifiedByImageMagickError){ @geo = Paperclip::Geometry.from_file(file) }
+    end
+
+    should "not generate from a nil file" do
+      file = nil
+      assert_raise(Paperclip::NotIdentifiedByImageMagickError){ @geo = Paperclip::Geometry.from_file(file) }
+    end
+
+    should "not generate from a file with no path" do
+      file = mock("file", :path => "")
+      file.stubs(:respond_to?).with("path").returns(true)
+      assert_raise(Paperclip::NotIdentifiedByImageMagickError){ @geo = Paperclip::Geometry.from_file(file) }
+    end
+
+    should "let us know when a command isn't found versus a processing error" do
+      old_path = ENV['PATH']
+      begin
+        ENV['PATH'] = ''
+        assert_raises(Paperclip::CommandNotFoundError) do
+          file = File.join(File.dirname(__FILE__), "fixtures", "5k.png")
+          @geo = Paperclip::Geometry.from_file(file)
+        end
+      ensure
+        ENV['PATH'] = old_path
+      end
     end
 
     [['vertical',   900,  1440, true,  false, false, 1440, 900, 0.625],

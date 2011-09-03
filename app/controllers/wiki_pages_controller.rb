@@ -18,7 +18,8 @@ class WikiPagesController < ApplicationController
       flash[:notice] = 'Page was successfully Created.'
       redirect_to @wiki_page
     else
-      render :action => "edit"
+      @wiki_page.destroy
+      render :action => "new"
     end
   end
   

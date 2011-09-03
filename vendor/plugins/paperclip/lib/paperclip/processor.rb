@@ -5,13 +5,14 @@ module Paperclip
   # are not required to follow suit.
   #
   # Processors are required to be defined inside the Paperclip module and
-  # are also required to be a subclass of Paperclip::Processor. There are
-  # only two methods you must implement to properly be a subclass: 
-  # #initialize and #make. Initialize's arguments are the file that will
-  # be operated on (which is an instance of File), and a hash of options
-  # that were defined in has_attached_file's style hash.
+  # are also required to be a subclass of Paperclip::Processor. There is
+  # only one method you *must* implement to properly be a subclass:
+  # #make, but #initialize may also be of use. Both methods accept 3
+  # arguments: the file that will be operated on (which is an instance of
+  # File), a hash of options that were defined in has_attached_file's
+  # style hash, and the Paperclip::Attachment itself.
   #
-  # All #make needs to do is return an instance of File (Tempfile is
+  # All #make needs to return is an instance of File (Tempfile is
   # acceptable) which contains the results of the processing.
   #
   # See Paperclip.run for more information about using command-line
@@ -32,17 +33,26 @@ module Paperclip
       new(file, options, attachment).make
     end
   end
-  
+
   # Due to how ImageMagick handles its image format conversion and how Tempfile
   # handles its naming scheme, it is necessary to override how Tempfile makes
   # its names so as to allow for file extensions. Idea taken from the comments
   # on this blog post:
   # http://marsorange.com/archives/of-mogrify-ruby-tempfile-dynamic-class-definitions
   class Tempfile < ::Tempfile
-    # Replaces Tempfile's +make_tmpname+ with one that honors file extensions.
-    def make_tmpname(basename, n)
-      extension = File.extname(basename)
-      sprintf("%s,%d,%d%s", File.basename(basename, extension), $$, n, extension)
+    # This is Ruby 1.8.7's implementation.
+    if RUBY_VERSION <= "1.8.6" || RUBY_PLATFORM =~ /java/
+      def make_tmpname(basename, n)
+        case basename
+        when Array
+          prefix, suffix = *basename
+        else
+          prefix, suffix = basename, ''
+        end
+
+        t = Time.now.strftime("%y%m%d")
+        path = "#{prefix}#{t}-#{$$}-#{rand(0x100000000).to_s(36)}-#{n}#{suffix}"
+      end
     end
   end
 end

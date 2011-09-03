@@ -13,10 +13,9 @@
       (<%=@wiki_page.wiki_aliases.collect(&:name).join(", ")%>)
     <%end%>
   </h1>
-
    
    <div class="content">
-      <%=RedCloth.new(@wiki_page.linked_content).to_html%>
+      <%=RedCloth.new(@wiki_page.linked_content).to_html.html_safe%>
    </div>
    
    <% unless @wiki_page.wiki_files.empty? %> 

@@ -7,13 +7,14 @@
       <li><%=link_to "Members", members_path, :class => (controller.class==MembersController ? "selected" : "")%></li>
       <li><%=link_to "Events", events_path, :class => (controller.class==EventsController ? "selected" : "")%></li>
       <li><%=link_to "Albums", albums_path, :class => (controller.class==AlbumsController ? "selected" : "")%></li>
+      <li><%=link_to "Contact Us", "/contactus", :class => (current_page?("/contactus") ? "selected" : "")%></li>
       <%if @current_member%>
-         <li><%=link_to "Wiki", wiki_page_path(WikiPage.first)%>
+         <li><%=link_to "Wiki", wiki_pages_path, :class => (controller.class==WikiPagesController ? "selected" : "")%>
          <li><%=link_to "Logout", logout_path %></li>
       <%else%>
          <li><%=link_to "Login", login_path, :class => (current_page?("/login") ? "selected" : "")%></li>
       <%end%>
 
-			<li class="international"><%= link_to "International<br/>Website", "http://zetapsi.org" %></li>
+			<li class="international"><%= link_to "International Website", "http://zetapsi.org" %></li>
    </ul>
 </div>

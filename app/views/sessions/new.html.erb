@@ -1,6 +1,6 @@
-<%=flash_notices%>
 
-<%form_tag "/sessions", :method => :POST do%>
+
+<%=form_tag "/sessions", :method => :POST do%>
    <div class="row">
       <%=label :member, :name%>
       <%=text_field_tag "member[name]", (params[:member][:name] || "")%>

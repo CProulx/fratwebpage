@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-
+  before_filter :requires_login, :except => [:index, :show]
   def index
     @photos = Photo.find(:all)
 
@@ -63,15 +63,20 @@ class PhotosController < ApplicationController
 
   def destroy
     @photo = Photo.find(params[:id])
-    @photo.destroy
-    
-    respond_to do |format|
-      format.html { redirect_to edit_album_path(@photo.album) }
-      format.js {
-        render :update do |page|
-          page["photo_#{@photo.id}"].remove
-        end
-      }
+    if @photo.destroy
+      respond_to do |format|
+        format.html { redirect_to edit_album_path(@photo.album) }
+        format.js {
+          render :update do |page|
+            page["photo_#{params[:id]}"].remove
+          end
+        }
+      end
+    else
+      respond_to do |format|
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @photo.errors, :status => :unprocessable_entity }
+      end
     end
   end
   

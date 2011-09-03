@@ -1,7 +1,8 @@
-<div  class='event'>
+<div  class='event' id=<%="event_#{event.id}"%> >
    <%if @current_member%>
-      <%=link_to "Edit", edit_event_path(object), :style => "float:right"%>
+      <%=link_to 'Delete', event_path(event), :method => :delete,:remote => true, :confirm => 'Are you sure you want to delete this event?', :style => "float:right"%>
+      <%=link_to "Edit", edit_event_path(event), :style => "float:right; margin-right:10px"%>
    <%end%>
-   <h3><%=event.name%></h3><span class='when'><%=object.when.strftime("%A, %b %d %Y")%></span>
+   <h3><%=link_to event.name, event_path(event)%></h3><span class='when'><%=event.when.strftime("%A, %b %d %Y")%></span>
    <p><%=event.description%></h2>
 </div>

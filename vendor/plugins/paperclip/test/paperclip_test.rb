@@ -1,39 +1,28 @@
-require 'test/helper'
+require './test/helper'
 
 class PaperclipTest < Test::Unit::TestCase
-  [:image_magick_path, :convert_path].each do |path|
-    context "Calling Paperclip.run with an #{path} specified" do
-      setup do
-        Paperclip.options[:image_magick_path] = nil
-        Paperclip.options[:convert_path]      = nil
-        Paperclip.options[path]               = "/usr/bin"
-      end
-
-      should "execute the right command" do
-        Paperclip.expects(:path_for_command).with("convert").returns("/usr/bin/convert")
-        Paperclip.expects(:bit_bucket).returns("/dev/null")
-        Paperclip.expects(:"`").with("/usr/bin/convert one.jpg two.jpg 2>/dev/null")
-        Paperclip.run("convert", "one.jpg two.jpg")
-      end
+  context "Calling Paperclip.run" do
+    should "run the command with Cocaine" do
+      Cocaine::CommandLine.expects(:new).with("convert", "stuff").returns(stub(:run))
+      Paperclip.run("convert", "stuff")
     end
   end
 
-  context "Calling Paperclip.run with no path specified" do
+  context "Paperclip.each_instance_with_attachment" do
     setup do
-      Paperclip.options[:image_magick_path] = nil
-      Paperclip.options[:convert_path]      = nil
+      @file = File.new(File.join(FIXTURES_DIR, "5k.png"), 'rb')
+      d1 = Dummy.create(:avatar => @file)
+      d2 = Dummy.create
+      d3 = Dummy.create(:avatar => @file)
+      @expected = [d1, d3]
     end
-
-    should "execute the right command" do
-      Paperclip.expects(:path_for_command).with("convert").returns("convert")
-      Paperclip.expects(:bit_bucket).returns("/dev/null")
-      Paperclip.expects(:"`").with("convert one.jpg two.jpg 2>/dev/null")
-      Paperclip.run("convert", "one.jpg two.jpg")
+    should "yield every instance of a model that has an attachment" do
+      actual = []
+      Paperclip.each_instance_with_attachment("Dummy", "avatar") do |instance|
+        actual << instance
+      end
+      assert_same_elements @expected, actual
     end
-  end
-
-  should "raise when sent #processor and the name of a class that exists but isn't a subclass of Processor" do
-    assert_raises(Paperclip::PaperclipError){ Paperclip.processor(:attachment) }
   end
 
   should "raise when sent #processor and the name of a class that doesn't exist" do
@@ -44,25 +33,16 @@ class PaperclipTest < Test::Unit::TestCase
     assert_equal ::Paperclip::Thumbnail, Paperclip.processor(:thumbnail)
   end
 
-  context "Paperclip.bit_bucket" do
-    context "on systems without /dev/null" do
-      setup do
-        File.expects(:exists?).with("/dev/null").returns(false)
-      end
-      
-      should "return 'NUL'" do
-        assert_equal "NUL", Paperclip.bit_bucket
-      end
-    end
+  should "get a class from a namespaced class name" do
+    class ::One; class Two; end; end
+    assert_equal ::One::Two, Paperclip.class_for("One::Two")
+  end
 
-    context "on systems with /dev/null" do
-      setup do
-        File.expects(:exists?).with("/dev/null").returns(true)
-      end
-      
-      should "return '/dev/null'" do
-        assert_equal "/dev/null", Paperclip.bit_bucket
-      end
+  should "raise when class doesn't exist in specified namespace" do
+    class ::Three; end
+    class ::Four; end
+    assert_raise NameError do
+      Paperclip.class_for("Three::Four")
     end
   end
 
@@ -91,21 +71,17 @@ class PaperclipTest < Test::Unit::TestCase
       end
 
       should "not assign the avatar on mass-set" do
-        @dummy.logger.expects(:debug)
-
         @dummy.attributes = { :other => "I'm set!",
                               :avatar => @file }
-        
+
         assert_equal "I'm set!", @dummy.other
         assert ! @dummy.avatar?
       end
 
       should "still allow assigment on normal set" do
-        @dummy.logger.expects(:debug).times(0)
-
         @dummy.other  = "I'm set!"
         @dummy.avatar = @file
-        
+
         assert_equal "I'm set!", @dummy.other
         assert @dummy.avatar?
       end
@@ -123,7 +99,8 @@ class PaperclipTest < Test::Unit::TestCase
       end
 
       should "be able to see the attachment definition from the subclass's class" do
-        assert_equal "tmp/:class/omg/:style.:extension", SubDummy.attachment_definitions[:avatar][:path]
+        assert_equal "tmp/:class/omg/:style.:extension",
+                     SubDummy.attachment_definitions[:avatar][:path]
       end
 
       teardown do
@@ -148,32 +125,54 @@ class PaperclipTest < Test::Unit::TestCase
       should "be valid" do
         assert @dummy.valid?
       end
+    end
 
-      context "then has a validation added that makes it invalid" do
-        setup do
-          assert @dummy.save
-          Dummy.class_eval do
-            validates_attachment_content_type :avatar, :content_type => ["text/plain"]
-          end
-          @dummy2 = Dummy.find(@dummy.id)
-        end
+    context "a validation with an if guard clause" do
+      setup do
+        Dummy.send(:"validates_attachment_presence", :avatar, :if => lambda{|i| i.foo })
+        @dummy = Dummy.new
+        @dummy.stubs(:avatar_file_name).returns(nil)
+      end
 
-        should "be invalid when reloaded" do
-          assert ! @dummy2.valid?, @dummy2.errors.inspect
-        end
+      should "attempt validation if the guard returns true" do
+        @dummy.expects(:foo).returns(true)
+        assert ! @dummy.valid?
+      end
 
-        should "be able to call #valid? twice without having duplicate errors" do
-          @dummy2.avatar.valid?
-          first_errors = @dummy2.avatar.errors
-          @dummy2.avatar.valid?
-          assert_equal first_errors, @dummy2.avatar.errors
-        end
+      should "not attempt validation if the guard returns false" do
+        @dummy.expects(:foo).returns(false)
+        assert @dummy.valid?
+      end
+    end
+
+    context "a validation with an unless guard clause" do
+      setup do
+        Dummy.send(:"validates_attachment_presence", :avatar, :unless => lambda{|i| i.foo })
+        @dummy = Dummy.new
+        @dummy.stubs(:avatar_file_name).returns(nil)
+      end
+
+      should "attempt validation if the guard returns true" do
+        @dummy.expects(:foo).returns(false)
+        assert ! @dummy.valid?
+      end
+
+      should "not attempt validation if the guard returns false" do
+        @dummy.expects(:foo).returns(true)
+        assert @dummy.valid?
+      end
+    end
+
+    should "not have Attachment in the ActiveRecord::Base namespace" do
+      assert_raises(NameError) do
+        ActiveRecord::Base::Attachment
       end
     end
 
     def self.should_validate validation, options, valid_file, invalid_file
       context "with #{validation} validation and #{options.inspect} options" do
         setup do
+          rebuild_class
           Dummy.send(:"validates_attachment_#{validation}", :avatar, options)
           @dummy = Dummy.new
         end
@@ -184,11 +183,11 @@ class PaperclipTest < Test::Unit::TestCase
           end
           if validation == :presence
             should "have an error on the attachment" do
-              assert @dummy.errors.on(:avatar)
+              assert @dummy.errors[:avatar_file_name]
             end
           else
             should "not have an error on the attachment" do
-              assert_nil @dummy.errors.on(:avatar)
+              assert @dummy.errors.blank?, @dummy.errors.full_messages.join(", ")
             end
           end
         end
@@ -198,10 +197,7 @@ class PaperclipTest < Test::Unit::TestCase
             @dummy.valid?
           end
           should "not have an error when assigned a valid file" do
-            assert ! @dummy.avatar.errors.key?(validation)
-          end
-          should "not have an error on the attachment" do
-            assert_nil @dummy.errors.on(:avatar)
+            assert_equal 0, @dummy.errors.size, @dummy.errors.full_messages.join(", ")
           end
         end
         context "and assigned an invalid file" do
@@ -210,17 +206,14 @@ class PaperclipTest < Test::Unit::TestCase
             @dummy.valid?
           end
           should "have an error when assigned a valid file" do
-            assert_not_nil @dummy.avatar.errors[validation]
-          end
-          should "have an error on the attachment" do
-            assert @dummy.errors.on(:avatar)
+            assert @dummy.errors.size > 0
           end
         end
       end
     end
 
     [[:presence,      {},                              "5k.png",   nil],
-     [:size,          {:in => 1..10240},               nil,        "12k.png"],
+     [:size,          {:in => 1..10240},               "5k.png",   "12k.png"],
      [:size,          {:less_than => 10240},           "5k.png",   "12k.png"],
      [:size,          {:greater_than => 8096},         "12k.png",  "5k.png"],
      [:content_type,  {:content_type => "image/png"},  "5k.png",   "text.txt"],
@@ -229,9 +222,76 @@ class PaperclipTest < Test::Unit::TestCase
       validation, options, valid_file, invalid_file = args
       valid_file   &&= File.open(File.join(FIXTURES_DIR, valid_file), "rb")
       invalid_file &&= File.open(File.join(FIXTURES_DIR, invalid_file), "rb")
-      
+
       should_validate validation, options, valid_file, invalid_file
     end
 
+    context "with content_type validation and lambda message" do
+      context "and assigned an invalid file" do
+        setup do
+          Dummy.send(:"validates_attachment_content_type", :avatar, :content_type => %r{image/.*}, :message => lambda {'lambda content type message'})
+          @dummy = Dummy.new
+          @dummy.avatar &&= File.open(File.join(FIXTURES_DIR, "text.txt"), "rb")
+          @dummy.valid?
+        end
+
+        should "have a content type error message" do
+          assert [@dummy.errors[:avatar_content_type]].flatten.any?{|error| error =~ %r/lambda content type message/ }
+        end
+      end
+    end
+
+    context "with size validation and less_than 10240 option" do
+      context "and assigned an invalid file" do
+        setup do
+          Dummy.send(:"validates_attachment_size", :avatar, :less_than => 10240)
+          @dummy = Dummy.new
+          @dummy.avatar &&= File.open(File.join(FIXTURES_DIR, "12k.png"), "rb")
+          @dummy.valid?
+        end
+
+        should "have a file size min/max error message" do
+          assert [@dummy.errors[:avatar_file_size]].flatten.any?{|error| error =~ %r/between 0 and 10240 bytes/ }
+        end
+      end
+    end
+
+    context "with size validation and less_than 10240 option with lambda message" do
+      context "and assigned an invalid file" do
+        setup do
+          Dummy.send(:"validates_attachment_size", :avatar, :less_than => 10240, :message => lambda {'lambda between 0 and 10240 bytes'})
+          @dummy = Dummy.new
+          @dummy.avatar &&= File.open(File.join(FIXTURES_DIR, "12k.png"), "rb")
+          @dummy.valid?
+        end
+
+        should "have a file size min/max error message" do
+          assert [@dummy.errors[:avatar_file_size]].flatten.any?{|error| error =~ %r/lambda between 0 and 10240 bytes/ }
+        end
+      end
+    end
+
+  end
+
+  context "configuring a custom processor" do
+    setup do
+      @freedom_processor = Class.new do
+        def make(file, options = {}, attachment = nil)
+          file
+        end
+      end.new
+
+      Paperclip.configure do |config|
+        config.register_processor(:freedom, @freedom_processor)
+      end
+    end
+
+    should "be able to find the custom processor" do
+      assert_equal @freedom_processor, Paperclip.processor(:freedom)
+    end
+
+    teardown do
+      Paperclip.clear_processors!
+    end
   end
 end

@@ -5,11 +5,12 @@ class WikiPage < ActiveRecord::Base
   has_many :wiki_aliases, :dependent => :destroy
   
   attr_accessible :name, :content, :wiki_files_accessor, :files_to_delete, :wiki_alias_accessor
-  named_scope :sorted_by_name, :order => "name"
+  scope :sorted_by_name, :order => "name"
   
   validates_uniqueness_of :name, :message => "must be unique"
-  
-  def validate
+  validate :alias_validation
+
+  def alias_validation
     begin
       self.wiki_aliases #for migration
     rescue Exception => e
@@ -93,7 +94,7 @@ class WikiPage < ActiveRecord::Base
   def wiki_alias_accessor=(array)
     self.wiki_aliases.destroy_all
     array.each{|a|
-      self.wiki_aliases.build(:name => a) unless a.blank?
+      self.wiki_aliases.build(:name => a, :wiki_page => self) unless a.blank?
     }
   end
   

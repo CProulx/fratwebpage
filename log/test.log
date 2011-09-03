@@ -1,0 +1,188 @@
+  [1m[36mSQL (0.2ms)[0m  [1mSHOW client_min_messages[0m
+  [1m[35mSQL (0.1ms)[0m  SET client_min_messages TO 'panic'
+  [1m[36mSQL (0.1ms)[0m  [1mSET standard_conforming_strings = on[0m
+  [1m[35mSQL (0.1ms)[0m  SET client_min_messages TO 'notice'
+  [1m[36mSQL (0.4ms)[0m  [1mSET time zone 'UTC'[0m
+  [1m[35mSQL (0.1ms)[0m  SHOW TIME ZONE
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.2ms)[0m  [1mSHOW client_min_messages[0m
+  [1m[35mSQL (0.1ms)[0m  SET client_min_messages TO 'panic'
+  [1m[36mSQL (0.1ms)[0m  [1mSET standard_conforming_strings = on[0m
+  [1m[35mSQL (0.0ms)[0m  SET client_min_messages TO 'notice'
+  [1m[36mSQL (0.4ms)[0m  [1mSET time zone 'UTC'[0m
+  [1m[35mSQL (0.1ms)[0m  SHOW TIME ZONE
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  Processing by AlbumsController#index as HTML
+  [1m[35mAlbum Load (0.3ms)[0m  SELECT "albums".* FROM "albums"
+  [1m[36mAlbum Load (0.1ms)[0m  [1mSELECT "albums".* FROM "albums"[0m
+Rendered albums/_sidebar.html.erb (1.3ms)
+Rendered shared/_navigation.html.erb (2.8ms)
+Completed 200 OK in 120ms (Views: 13.6ms | ActiveRecord: 44.9ms)
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  Processing by AlbumsController#new as HTML
+Redirected to http://test.host/login
+Completed 302 Found in 1ms
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  Processing by MembersController#index as HTML
+  [1m[35mSQL (0.9ms)[0m   SELECT tablename
+ FROM pg_tables
+ WHERE schemaname = ANY (current_schemas(false))
+  [1m[36mSQL (0.7ms)[0m  [1m SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = '"members"'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+[0m
+  [1m[35mMember Load (0.6ms)[0m  SELECT "members".* FROM "members" WHERE "members"."is_alumni" = 'f' ORDER BY fname, lname
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+  [1m[35mEvent Load (0.1ms)[0m  SELECT "events".* FROM "events"
+  [1m[36mEvent Load (0.1ms)[0m  [1mSELECT "events".* FROM "events"[0m
+Rendered events/_calender.rhtml (43.2ms)
+Rendered events/_sidebar_calenders.rhtml (44.7ms)
+Rendered shared/_navigation.html.erb (1.7ms)
+Completed 200 OK in 69ms (Views: 48.8ms | ActiveRecord: 8.1ms)
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  Processing by MembersController#new as HTML
+Redirected to http://test.host/login
+Completed 302 Found in 1ms
+  [1m[35mSQL (0.1ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m   SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+ FROM pg_attribute a LEFT JOIN pg_attrdef d
+ ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+ WHERE a.attrelid = '"photos"'::regclass
+ AND a.attnum > 0 AND NOT a.attisdropped
+ ORDER BY a.attnum
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT COUNT(*) FROM "photos"[0m
+  Processing by PhotosController#create as HTML
+  Parameters: {"photo"=>{}}
+Redirected to http://test.host/login
+Completed 302 Found in 1ms
+  [1m[35mSQL (0.1ms)[0m  SELECT COUNT(*) FROM "photos"
+  [1m[36mSQL (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.0ms)[0m  BEGIN
+  [1m[36mSQL (0.1ms)[0m  [1mSELECT COUNT(*) FROM "photos"[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  ROLLBACK
+  [1m[36mSQL (0.0ms)[0m  [1mBEGIN[0m
+  Processing by PhotosController#index as HTML
+  [1m[35mPhoto Load (0.1ms)[0m  SELECT "photos".* FROM "photos"
+Completed 500 Internal Server Error in 81ms
+  [1m[36mSQL (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.1ms)[0m  BEGIN
+  Processing by PhotosController#new as HTML
+Redirected to http://test.host/login
+Completed 302 Found in 1ms
+  [1m[36mSQL (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.0ms)[0m  BEGIN
+  [1m[36mSQL (0.0ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.0ms)[0m  BEGIN
+  [1m[36mSQL (0.0ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.0ms)[0m  BEGIN
+  [1m[36mSQL (0.0ms)[0m  [1mROLLBACK[0m
+  [1m[35mSQL (0.0ms)[0m  BEGIN
+  [1m[36mSQL (0.0ms)[0m  [1mROLLBACK[0m

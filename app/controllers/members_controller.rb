@@ -83,11 +83,14 @@ class MembersController < ApplicationController
 
   def destroy
     @member = Member.find(params[:id])
-    @member.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(members_url) }
-      format.xml  { head :ok }
+    if @member.destroy
+      respond_to do |format|
+        format.html { redirect_to(members_url) }
+        format.xml  { head :ok }
+      end
+    else
+      format.html { render :action => "index" }
+      format.xml  { render :xml => @member.errors, :status => :unprocessable_entity }
     end
   end
   
@@ -101,7 +104,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @member.update_attribute(:is_phi,true)
     @current_member.update_attribute(:is_phi,false)
-    flash[:notice] = "You have passes on the torch. Well done..."
+    flash[:notice] = "You have passed on the torch. Well done..."
     redirect_to :action => :index
   end
 end

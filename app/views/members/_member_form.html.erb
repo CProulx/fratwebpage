@@ -1,66 +1,20 @@
-
+<%=simple_form_for @member do |f|%>
 <p><b>For Alumni: </b> If you are Alumni, please select the "Are you Alumni?" option. All Alumni infomation is only visible to members of this site. We will not give out any personal information.
 <p><b>For Actives: </b>This is a public site, so keep it clean! Only the information posted in the "Public Info" will be seen by the public</p> 
 <br/>
 <b>Public Info</b>
 <br/>
-<br/>
-<%=f.label :fname, "First Name"%>
-<%=f.text_field :fname%>
+<%=f.input :fname, :label => "First Name"%>
+<%=f.input :lname, :label => "Last Name"%>
+<%=f.input :nickname%>
+<%=f.input :position%>
+<%=f.input :degree%>
+<%=f.input :grad_year%>
+<%=f.input :summary, :as => :text, :label => "About you"%>
+
+<%=f.input :is_alumni,:label => "Are you Almuni?" ,:as => :radio,:hint => "Alumni will only be visible to members."%>
 
 <br/>
-
-<%=f.label :lname, "Last Name"%>
-<%=f.text_field :lname%>
-
-<br/>
-
-<%=f.label :nickname%>
-<%=f.text_field :nickname%>
-
-<br/>
-
-<%=f.label :position%>
-<%=f.text_field :position%>
-
-<br/>
-
-<%=f.label :degree, "Degree"%>
-<%=f.text_field :degree%>
-
-<br/>
-
-<%=f.label :grad_year, "Grad Year"%>
-<%=f.text_field :grad_year%>
-
-<br/>
-
-<%=f.label :summary, "Your Bio"%>
-<%=f.text_area :summary, :rows => 3%>
-
-<br/>
-
-<%=label_tag "member[links][url]", "Your Links"%>
-<ul id='member_links'>
-<%if not @member.links.empty?%>
-    <%for link in @member.links%>
-        <li>
-           <%=select_tag "links[][mytype]", options_for_select(Link::MYTYPES)%><%=text_field_tag "links[][url]", "#{link.url}"%>
-        </li>
-    <%end%>
-<%else%>
-     <li>
-        <%=select_tag "links[][mytype]", options_for_select(Link::MYTYPES)%><%=text_field_tag "links[][url]"%>
-    </li>
-<%end%>
-</ul>
-<%=link_to_function "Add another link", "$('member_links').insert('<li>#{select_tag  "links[][mytype]", options_for_select(Link::MYTYPES)}#{text_field_tag "links[][url]"}</li>')"%>
-<br/>
-<br/>
-<%=f.label :is_alumni, "Is this member an alumni? (You will only be visible to members)"%>
-<%=f.check_box :is_alumni%>
-
-<br/><br/>
 Upload Your Picture here 
 <br/>
 <%=file_field_tag "member[image][image]"%>
@@ -74,21 +28,11 @@ Upload Your Picture here
  Please use the information you wish to be contacted at.
 <br/>
 <br/>
-<%=f.label :phone, "Phone"%>
-<%=f.text_field :phone%>
-
-<br/>
-
-<%=f.label :email, "Email"%>
-<%=f.text_field :email%>
-<br/>
-<br/>
+<%=f.input :phone%>
+<%=f.input :email%>
 <hr/>
-<br/>
-
-<%=f.label :password%>
-<%=f.password_field  :password%>
-
-<br/>
-<%=f.label :password_confirmation, "Confirm"%>
-<%=f.password_field :password_confirmation%>
+<%=f.input :password%>
+<%=f.input :password_confirmation%>
+<hr/>
+<%=f.button :submit%>
+<%end%>

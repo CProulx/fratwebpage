@@ -1,6 +1,6 @@
 <%content_for :sidebar, render(:partial => "show_sidebar")%>
 
-<%form_for @wiki_page do |f|%>
+<%=form_for @wiki_page do |f|%>
   <%= f.error_messages %>
    
   <p>
@@ -13,7 +13,7 @@
     <ul id="aliases">
       <% if !@wiki_page.wiki_aliases.blank? %>
         <% for wiki_alias in @wiki_page.wiki_aliases %>
-          <li><%=text_field_tag "wiki_page[wiki_alias_accessor][]", wiki_alias%></li>
+          <li><%=text_field_tag "wiki_page[wiki_alias_accessor][]", wiki_alias.name%></li>
         <% end %>
       <% else %>
         <li><%=text_field_tag "wiki_page[wiki_alias_accessor][]"%></li>

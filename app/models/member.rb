@@ -7,7 +7,7 @@ class Member < ActiveRecord::Base
   
   validates_length_of :password, :within => (6..20), :allow_nil => true, :if => :new_record?
   validates_length_of :name, :minimum => 1
-  
+  validate :fname, :lname, :nickname, :presence =>true
   attr_accessor :password, :password_confirmation
   attr_accessible :fname, :lname, :password, :password_confirmation, :nickname, :position, :image, :is_alumni, :degree, :summary, :grad_year, :phone, :email, :links
   

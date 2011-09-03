@@ -14,7 +14,7 @@
        </div>
      <%end%>
      
-     <%= link_to image_tag(album.cover_image.image.url(:thumb))+"<span>#{album.name}</span>", album %>
+     <%= link_to image_tag(album.cover_image.image.url(:thumb))+"<span>#{album.name}</span>".html_safe, album %>
    </div>
 <% end %>
 

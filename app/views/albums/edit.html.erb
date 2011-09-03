@@ -4,7 +4,7 @@
 
 <h1>Editing albums</h1>
 
-<% form_for @album, :html => { :multipart => true }  do |f| %>
+<%= form_for @album, :html => { :multipart => true }  do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -24,9 +24,7 @@
         <li id='photo_<%=ph.id%>'>
           <div class='photo' >
             <%if @current_member%>
-               <%= link_to_remote 'Destroy', 
-                    {:url => photo_path(ph), :confirm => 'Are you sure you want to delete this image?', :method => :delete, :format => "js"}, 
-                    {:class => "delete"} %>
+               <%= link_to 'Delete', photo_path(ph, :format => "js"), :method => :delete,:remote => true, :confirm => 'Are you sure you want to delete this image?', :class => "delete", :format => "js" unless @album.photos.count == 1%>
              <%end%>
             <%= image_tag(ph.image.url(:medium)) %>
           </div>

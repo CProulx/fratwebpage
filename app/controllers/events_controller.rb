@@ -57,5 +57,25 @@ class EventsController < ApplicationController
     end
     
   end
+
+  def destroy
+    debugger
+    puts "\nvllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll\n"
+    @event = Event.find(params[:id])
+    respond_to do |format|
+      if @event.destroy
+        format.html { redirect_to(events_url) }
+        format.xml  { head :ok }
+        format.js {
+            render :update do |page|
+              page["event_#{params[:id]}"].remove
+            end
+          }
+      else
+          format.html { render :action => "index" }
+          format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
   
 end

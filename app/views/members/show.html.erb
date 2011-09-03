@@ -11,10 +11,10 @@
 	
 	<div class="infoarea">
 		<p>
-			<%="<h2>Position:#{@member.position}<h2/><br/>" if @member.position%>
-			<%="<h2>Degree: #{@member.degree}<h2/><br/>" if @member.degree%>
-			<%="<h2>Grad Year: #{@member.grad_year}<h2/><br/>" if @member.grad_year%>
-			<%="<h2>About: #{@member.summary}<h2/><br/>" if @member.summary%>
+			<h2><%="Position:#{@member.position}" if @member.position%><h2/><br/>
+			<h2><%="Degree: #{@member.degree}" if @member.degree%><h2/><br/>
+			<h2><%="Grad Year: #{@member.grad_year}" if @member.grad_year%><h2/><br/>
+			<h2><%="About: #{@member.summary}" if @member.summary%><h2/><br/>
 		</p>
 	
 	  <div class="links">
