@@ -1,16 +1,9 @@
 <h1>Editing members</h1>
 
-<% form_for @member, :html => { :multipart => true } do |f| %>
-  <%= f.error_messages %>
 
    <p>
-      <%=render :partial => "member_form", :locals => {:f => f}%>
+      <%=render :partial => "member_form"%>
    </p>
-
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
 
 <%= link_to 'Show', @member %> |
 <%= link_to 'Back', members_path %>

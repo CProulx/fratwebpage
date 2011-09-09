@@ -53,22 +53,6 @@ class MembersController < ApplicationController
 
   def update
     @member = Member.find(params[:id])
-    @links = params[:links]
-    if not @links.empty? 
-      urls = Link.find_all_by_member_id(@member.id).collect(&:url)
-      @links.each{|link|
-        begin
-          if urls.include?(link.url)
-            next
-          else
-            temp = Link.new(:my_type => link['mytype'], :url => link['url'], :member_id => @member.id)
-            temp.save
-          end
-        rescue
-          flash[:notice] = 'Error creating link. Please try again.'
-        end
-      }
-    end
     respond_to do |format|
       if @member.update_attributes(params[:member])
         flash[:notice] = 'Member was successfully updated.'
@@ -87,6 +71,11 @@ class MembersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to(members_url) }
         format.xml  { head :ok }
+        format.js {
+           render :update do |page|
+            page["member_#{params[:id]}"].remove
+           end
+          }
       end
     else
       format.html { render :action => "index" }
