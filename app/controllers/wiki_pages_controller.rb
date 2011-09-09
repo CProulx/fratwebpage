@@ -47,8 +47,20 @@ class WikiPagesController < ApplicationController
   
   def destroy
     @wiki_page = WikiPage.find(params[:id])
-    @wiki_page.destroy
-    redirect_to wiki_pages_path
+    if @wiki_page.destroy
+      respond_to do |format|
+        format.html { redirect_to(wiki_page_url) }
+        format.xml  { head :ok }
+        format.js {
+           render :update do |page|
+            page["wiki_page_#{params[:id]}"].remove
+           end
+          }
+      end
+    else
+      format.html { render :action => "index" }
+      format.xml  { render :xml => @wiki_page.errors, :status => :unprocessable_entity }
+    end
   end
   
 end
