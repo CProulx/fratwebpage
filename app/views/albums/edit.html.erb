@@ -24,7 +24,7 @@
         <li id='photo_<%=ph.id%>'>
           <div class='photo' >
             <%if @current_member%>
-               <%= link_to 'Delete', photo_path(ph, :format => "js"), :method => :delete,:remote => true, :confirm => 'Are you sure you want to delete this image?', :class => "delete", :format => "js" unless @album.photos.count == 1%>
+              <%= link_to_function 'Remove', "remove_photo(#{ph.id})", :class => "delete" unless @album.photos.count == 1%>
              <%end%>
             <%= image_tag(ph.image.url(:medium)) %>
           </div>
@@ -42,7 +42,7 @@
     <%=file_field_tag("album[initial_photos][]")%><br/>
   </div>
   <%=link_to_function "Add more photos" do |page|
-     page[:photo_list].insert(file_field_tag("album[initial_photos][]")+"<br/>")
+     page[:photo_list].insert(file_field_tag("album[initial_photos][]")+"<br/>".html_safe)
   end%>
   
   <p>

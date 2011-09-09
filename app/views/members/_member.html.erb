@@ -1,11 +1,11 @@
 <div class="member" id="member_<%=member.id%>">
    <%if @current_member and (@current_member==member or @current_member.is_phi)%>
-      <div style="float:right">
+      <div style="float:right;">
          <%if @current_member.is_phi? and @current_member!=member%>
-         <%= link_to "Make phi", make_phi_member_path(member), :confirm => "Are you sure you want to hand over the presidency?", :method => :PUT %>
+         <%= link_to "Make phi", make_phi_member_path(member), :confirm => "Are you sure you want to hand over the presidency?", :method => :put %>
          <%end%>
-         <%= link_to 'Edit', edit_member_path(member) %>
-         <%= link_to 'Destroy', member, :method => :delete, :confirm => 'Are you sure you want to delete this member?' %>
+        <%= button_to 'Destroy', member, :method => :delete, :remote => true,:format => 'js',:confirm => 'Are you sure you want to delete this member?' , :style=>"float:right;"%>
+         <%= button_to 'Edit', edit_member_path(member), :method => :get,:style => "float:right; margin-right:10px" %>
       </div>
    <%end%>
    

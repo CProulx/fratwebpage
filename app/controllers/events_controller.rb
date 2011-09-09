@@ -59,8 +59,6 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    debugger
-    puts "\nvllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll\n"
     @event = Event.find(params[:id])
     respond_to do |format|
       if @event.destroy

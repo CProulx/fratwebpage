@@ -9,8 +9,8 @@
    <div class="album">
      <%if @current_member%>
        <div>
-         <%= link_to 'Edit', edit_album_path(album) %>
-         <%= link_to 'Destroy', album, :confirm => 'Are you sure you want to delete this album?', :method => :delete, :class => "delete" %>
+         <%= button_to 'Edit', edit_album_path(album), :method => "get" %>
+         <%= button_to 'Destroy', album, :confirm => 'Are you sure you want to delete this album?', :method => :delete,:format => 'js', :class => "delete" %>
        </div>
      <%end%>
      
