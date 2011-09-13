@@ -5,10 +5,14 @@
 <br/>
 <div class="list">
    <%for page in @wiki_pages%>
-      <div class='listItem'>
+      <div class='listItem' id=<%="wiki_page_#{page.id}"%> >
+        <%=button_to 'Delete', wiki_page_path(page), :method => :delete,:remote => true,:format => 'js', :confirm => 'Are you sure you want to delete this page?', :style => "float:right"%>
+      <%=button_to "Edit", edit_wiki_page_path(page),:method => :get ,:style => "float:right; margin-right:10px"%>
          <span class="edit_date" style="color:#aaa"><%=page.updated_at.to_s(:short)%></span>
          <%=link_to page.name, wiki_page_path(page)%>:
          <span class="description"><%=page.content.slice(0..40).gsub(/\n|\s/," ")%>...</span>
+         <span>
+         </span>
       </div>
    <%end%>
 </div>

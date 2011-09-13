@@ -80,6 +80,8 @@ ol {list-style:decimal; padding-left:20px; margin:3px;}
 .wiki_page h2, .edit_wiki_page h2 {font-weight:bold; color:#666;}
 .wiki_page ul, .edit_wiki_page ul {padding:5px 20px;}
 
+.list {}
+.list .listItem {height: 30px;}
 
 .simple_form label {
   float: left;
